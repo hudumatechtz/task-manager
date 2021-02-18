@@ -1,21 +1,21 @@
-const Sequalize = require("sequelize");
+const Sequelize = require("sequelize");
 
 const sequelize = require("../utils/database");
 
 const User = sequelize.define("user", {
   id: {
-    type: Sequalize.INTEGER,
+    type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
   username: {
     allowNull: false,
-    type: Sequalize.STRING,
+    type: Sequelize.STRING,
   },
   password: {
     allowNull: false,
-    type: Sequalize.STRING,
+    type: Sequelize.STRING,
   },
 });
 
