@@ -11,13 +11,13 @@ const sequelize = new Sequelize(
   }
 );
 
-const print = async() => {
-    try {
-        await sequelize.authenticate();
-        console.log("Connection successfully");
-      } catch (error) {
-        console.log(error);
-      }
-}
-print();
+// const print = async() => {
+//     try {
+//         await sequelize.authenticate();
+//         console.log("Connection successfully");
+//       } catch (error) {
+//         console.log(error);
+//       }
+// }
+// print();
 module.exports = sequelize;
