@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 app.use("/account", authRoute);
 app.use(userRoute);
-// app.use(taskRoute);
+app.use(taskRoute);
 
 app.use("/", (req, res, next) => {
   res.status(200).json({ api: "Welcome to TaskManager Backend" });
