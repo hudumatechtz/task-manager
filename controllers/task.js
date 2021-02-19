@@ -84,10 +84,10 @@ exports.getTasks = async (req, res, next) => {
       const error = new Error("TASKS DO NOT EXIST/ OR COULD NOT FETCHED");
       error.statusCode = 501;
       throw error;
-    }else if(userTasks.length <= 0){
-        return res.json({tasks: [], message: "TASKS ARE EMPTY"});
+    } else if (userTasks.length <= 0) {
+      return res.json({ tasks: [], message: "TASKS ARE EMPTY" });
     }
-    res.json({ tasks: userTasks, message: "TASKS OBTAINED"});
+    res.json({ tasks: userTasks, message: "TASKS OBTAINED" });
   } catch (error) {
     next(error);
   }
@@ -110,7 +110,7 @@ exports.postTask = async (req, res, next) => {
   }
 };
 exports.getOnGoing = async (req, res, next) => {
-//   const onGoing = req.params.ongoing;
+  //   const onGoing = req.params.ongoing;
   try {
     const taskOnGoing = await Task.findAll({
       where: {
@@ -119,15 +119,15 @@ exports.getOnGoing = async (req, res, next) => {
       },
     });
     if (taskOnGoing.length <= 0) {
-        return res.json({ onGoing: [], message: "NO TASK is ongoing" });
-      }
+      return res.json({ onGoing: [], message: "NO TASK is ongoing" });
+    }
     res.json({ message: "GOT SOME ONGOING TASKS", onGoing: taskOnGoing });
   } catch (error) {
     next(error);
   }
 };
 exports.getNew = async (req, res, next) => {
-//   const newTask = req.params.newtask;
+  //   const newTask = req.params.newtask;
   try {
     const taskNew = await Task.findAll({
       where: {
@@ -136,15 +136,15 @@ exports.getNew = async (req, res, next) => {
       },
     });
     if (taskNew.length <= 0) {
-        return res.json({ taskNew: [], message: "NO TASK ON QUEUE" });
-      }
+      return res.json({ taskNew: [], message: "NO TASK ON QUEUE" });
+    }
     res.json({ message: "GOT SOME NEW TASKS ON QUEUE", taskNew: taskNew });
   } catch (error) {
     next(error);
   }
 };
 exports.getCompleted = async (req, res, next) => {
-//   const completed = req.params.completed;
+  //   const completed = req.params.completed;
   try {
     const completed = await Task.findAll({
       where: {
@@ -163,7 +163,7 @@ exports.getCompleted = async (req, res, next) => {
 };
 
 exports.getTaskNumbers = async (req, res, next) => {
-    console.log(req.userId);
+  console.log(req.userId);
   try {
     let totalTasks = await Task.count({
       where: {
@@ -188,8 +188,8 @@ exports.getTaskNumbers = async (req, res, next) => {
         newTask: true,
       },
     });
-    if(!totalTasks){
-        totalTasks = 0;
+    if (!totalTasks) {
+      totalTasks = 0;
     }
     if (!completed) {
       completed = 0;
@@ -200,67 +200,73 @@ exports.getTaskNumbers = async (req, res, next) => {
     if (!onGoing) {
       onGoing = 0;
     }
-    res
-      .status(201)
-      .json({ completed: completed, onGoing: onGoing, newTasks: newTasks, totalTasks: totalTasks });
+    res.status(201).json({
+      completed: completed,
+      onGoing: onGoing,
+      newTasks: newTasks,
+      totalTasks: totalTasks,
+    });
   } catch (error) {
     next(error);
   }
 };
 
 exports.postMarkGoing = async (req, res, next) => {
-    const userId = req.userId;
-    const id = req.body.id;
-    console.log(id);
-    try {
-      const userTask = await Task.findOne({
-        where: {
-          userId: userId,
-        },
-      });
-      if (!userTask) {
-        const error = new Error("TASKS DO NOT EXIST/ OR COULD NOT FETCHED");
-        error.statusCode = 501;
-        throw error;
-      }
-      userTask.onGoing = true;
-      userTask.newTask = false;
-
-      const updatedTask = await userTask.save();
-      if(!updatedTask){
-        const error = new Error("TASK COULD NOT BE MARKED going");
-        error.statusCode = 401;
-      }
-      res.json({message: "TASK MARKED ONGOING"})
-    } catch (error) {
-        next(error);
+  const userId = req.userId;
+  const id = req.body.id;
+  console.log(id);
+  try {
+    const userTask = await Task.findOne({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
+    if (!userTask) {
+      const error = new Error("TASKS DO NOT EXIST/ OR COULD NOT FETCHED");
+      error.statusCode = 501;
+      throw error;
     }
-}
+    userTask.onGoing = true;
+    userTask.newTask = false;
+
+    const updatedTask = await userTask.save();
+    console.log(updatedTask);
+    if (!updatedTask) {
+      const error = new Error("TASK COULD NOT BE MARKED going");
+      error.statusCode = 401;
+    }
+    res.json({ message: "TASK MARKED ONGOING" });
+  } catch (error) {
+    next(error);
+  }
+};
 exports.postMarkComplete = async (req, res, next) => {
-    const userId = req.userId;
-    const id = req.body.id;
-    console.log(id);
-    try {
-      const userTask = await Task.findOne({
-        where: {
-          userId: userId,
-        },
-      });
-      if (!userTask) {
-        const error = new Error("TASKS DO NOT EXIST/ OR COULD NOT FETCHED");
-        error.statusCode = 501;
-        throw error;
-      }
-      userTask.onGoing = false;
-      userTask.completed = true;
-
-      const updatedTask = await userTask.save();
-      if(!updatedTask){
-        const error = new Error("TASK COULD NOT BE COMPLETED");
-        error.statusCode = 401;
-      }
-      res.json({message: "TASK MARKED completed"})
-    } catch (error) {
-        next(error);
+  const userId = req.userId;
+  const id = req.body.id;
+  console.log(id);
+  try {
+    const userTask = await Task.findOne({
+      where: {
+        id: id,
+        userId: userId,
+      },
+    });
+    if (!userTask) {
+      const error = new Error("TASKS DO NOT EXIST/ OR COULD NOT FETCHED");
+      error.statusCode = 501;
+      throw error;
     }
-}
+    userTask.onGoing = false;
+    userTask.completed = true;
+
+    const updatedTask = await userTask.save();
+    if (!updatedTask) {
+      const error = new Error("TASK COULD NOT BE COMPLETED");
+      error.statusCode = 401;
+    }
+    res.json({ message: "TASK MARKED completed" });
+  } catch (error) {
+    next(error);
+  }
+};
