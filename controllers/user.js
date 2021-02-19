@@ -59,8 +59,37 @@ exports.deleteUser = async (req, res, next) => {
       const error = new Error("USER COULD NOT BE DELETED");
       error.statusCode = 401;
       throw error;
-    }   
+    }
     res.status(200).json({ message: "USER DELETED SUCCESSFULLY" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.postUpdateUser = async (req, res, next) => {
+  const userId = req.userId;
+  const { username } = req.body;
+  const user = await User.findOne({
+    where: {
+      id: userId,
+    },
+  });
+  if (!user) {
+    const error = new Error("user COULD NOT BE updated");
+    error.statusCode = 501;
+    throw error;
+  }
+  user.username = username;
+  const updatedUser = await user.save();
+  if (!updatedUser) {
+    const error = new Error("USER COULD NOT BE UPDATED");
+    error.statusCode = 401;
+  }
+
+  res.json({
+    message: "USER UPDATED SECCESSFULLY",
+  });
+  try {
   } catch (error) {
     next(error);
   }
